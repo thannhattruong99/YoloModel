@@ -1,8 +1,8 @@
 from tensorflow.keras import callbacks, optimizers
 from yolov4.tf import SaveWeightsCallback, YOLOv4
 import time
-import matplotlib.pyplot as plt
 
+start_time = time.time
 yolo = YOLOv4(tiny=True)
 yolo.classes = "../data/classes.names"
 # yolo.input_size = 32
@@ -71,3 +71,5 @@ yolo.fit(
     validation_freq=5,
     steps_per_epoch=100,
 )
+
+print("Total of time train: ", time.time - start_time)
