@@ -1,9 +1,10 @@
 from tensorflow.keras import callbacks, optimizers
 from yolov4.tf import SaveWeightsCallback, YOLOv4
 import time
+import matplotlib.pyplot as plt
 
 yolo = YOLOv4(tiny=True)
-yolo.classes = "/Users/truongtn/Desktop/Desktop/HocTap/Semester8/Python/tools/OIDv4_ToolKit/OIDv4_ToolKit/classes.names"
+yolo.classes = "../data/classes.names"
 # yolo.input_size = 32
 yolo.batch_size = 32
 # yolo.input_size = 608
@@ -17,19 +18,19 @@ yolo.make_model()
 # )
 
 train_data_set = yolo.load_dataset(
-    "/Users/truongtn/Desktop/Desktop/HocTap/Semester8/Python/tools/OIDv4_ToolKit/OIDv4_ToolKit/OID/Dataset/train/trainPerson.txt",
-    image_path_prefix="/Users/truongtn/Desktop/Desktop/HocTap/Semester8/Python/tools/OIDv4_ToolKit/OIDv4_ToolKit/OID/Dataset/train/Person",
+    "../data/train/trainPerson.txt",
+    image_path_prefix="../data/train/Person",
     label_smoothing=0.05
 )
 
-# val_data_set = yolo.load_dataset(
-#     "/Users/truongtn/Desktop/Desktop/HocTap/Semester8/Python/Aerial Maritime.v9-tiled.coco/main_me/custom_valid2017.txt",
-#     image_path_prefix="/Users/truongtn/Desktop/Desktop/HocTap/Semester8/Python/Aerial Maritime.v9-tiled.coco/valid",
-#     training=False
-# )
+val_data_set = yolo.load_dataset(
+    "../data/validation/ValPerson.txt",
+    image_path_prefix="../data/validation/Person",
+    training=False
+)
 
 # epochs = 400
-epochs = 30
+epochs = 100
 lr = 1e-4
 
 optimizer = optimizers.Adam(learning_rate=lr)
@@ -44,15 +45,20 @@ def lr_scheduler(epoch):
         return lr * 0.1
     return lr * 0.01
 
+checkpoint_filepath = "./log/checkpoint"
 _callbacks = [
     callbacks.LearningRateScheduler(lr_scheduler),
     callbacks.TerminateOnNaN(),
     callbacks.TensorBoard(
-        log_dir="/Users/truongtn/Desktop/Desktop/HocTap/Semester8/Python/Demo_Python/log/person",
+        log_dir="./log/person",
+    ),
+    callbacks.ModelCheckpoint(
+        filepath=checkpoint_filepath,
+        save_best_only=True
     ),
     SaveWeightsCallback(
-        yolo=yolo, dir_path="/Users/truongtn/Desktop/Desktop/HocTap/Semester8/Python/Demo_Python/weight/person",
-        weights_type="yolo", epoch_per_save=5
+        yolo=yolo, dir_path="./weight/weight",
+        weights_type="yolo", epoch_per_save=10
     ),
 ]
 
@@ -60,8 +66,8 @@ yolo.fit(
     train_data_set,
     epochs=epochs,
     callbacks=_callbacks,
-    # validation_data=val_data_set,
-    # validation_steps=50,
-    # validation_freq=5,
+    validation_data=val_data_set,
+    validation_steps=50,
+    validation_freq=5,
     steps_per_epoch=100,
 )
