@@ -34,18 +34,18 @@ lr = 1e-4
 # optimizer = optimizers.Adam(learning_rate=lr)
 yolo.compile(loss_iou_type="ciou")
 
-def lr_scheduler(epoch):
-    if epoch < int(epochs * 0.5):
-        return lr
-    if epoch < int(epochs * 0.8):
-        return lr * 0.5
-    if epoch < int(epochs * 0.9):
-        return lr * 0.1
-    return lr * 0.01
+# def lr_scheduler(epoch):
+#     if epoch < int(epochs * 0.5):
+#         return lr
+#     if epoch < int(epochs * 0.8):
+#         return lr * 0.5
+#     if epoch < int(epochs * 0.9):
+#         return lr * 0.1
+#     return lr * 0.01
 
 checkpoint_filepath = "./log/checkpoint"
 _callbacks = [
-    callbacks.LearningRateScheduler(lr_scheduler),
+    # callbacks.LearningRateScheduler(lr_scheduler),
     callbacks.TerminateOnNaN(),
     callbacks.TensorBoard(
         log_dir="./log/person",
