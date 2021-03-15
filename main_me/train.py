@@ -11,7 +11,7 @@ yolo.batch_size = 32
 
 yolo.make_model()
 yolo.load_weights(
-    "/Users/truongtn/Desktop/Desktop/HocTap/Semester8/Python/Demo_Python/main_me/weight/weight/yolov4-tiny-final.weights",
+    "./weight/weight/yolov4-tiny-final.weights",
     weights_type="yolo"
 )
 
