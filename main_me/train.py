@@ -1,8 +1,6 @@
 from tensorflow.keras import callbacks, optimizers
 from yolov4.tf import SaveWeightsCallback, YOLOv4
-import time
 
-start_time = time.time
 yolo = YOLOv4(tiny=True)
 yolo.classes = "../data/classes.names"
 # yolo.input_size = 32
@@ -12,10 +10,10 @@ yolo.batch_size = 32
 
 
 yolo.make_model()
-# yolo.load_weights(
-#     "/Users/truongtn/Desktop/Desktop/HocTap/Semester8/Python/YoloV4_Detect_Custom/yolov4-custom-functions/data/yolov4.weights",
-#     weights_type="yolo"
-# )
+yolo.load_weights(
+    "/Users/truongtn/Desktop/Desktop/HocTap/Semester8/Python/Demo_Python/main_me/weight/weight/yolov4-tiny-final.weights",
+    weights_type="yolo"
+)
 
 train_data_set = yolo.load_dataset(
     "../data/train/trainPerson.txt",
@@ -30,11 +28,11 @@ val_data_set = yolo.load_dataset(
 )
 
 # epochs = 400
-epochs = 100
+epochs = 50
 lr = 1e-4
 
-optimizer = optimizers.Adam(learning_rate=lr)
-yolo.compile(optimizer=optimizer, loss_iou_type="ciou")
+# optimizer = optimizers.Adam(learning_rate=lr)
+yolo.compile(loss_iou_type="ciou")
 
 def lr_scheduler(epoch):
     if epoch < int(epochs * 0.5):
@@ -69,7 +67,7 @@ yolo.fit(
     validation_data=val_data_set,
     validation_steps=50,
     validation_freq=5,
-    steps_per_epoch=100,
+    # steps_per_epoch=100,
 )
 
-print("Total of time train: ", time.time - start_time)
+# print("Total of time train: ", time.time - start_time)
