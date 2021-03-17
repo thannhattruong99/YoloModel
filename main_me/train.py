@@ -29,23 +29,18 @@ val_data_set = yolo.load_dataset(
 
 # epochs = 400
 epochs = 50
-lr = 1e-4
+# lr = 1e-4
+lr = 0.01
 
-# optimizer = optimizers.Adam(learning_rate=lr)
+optimizer = optimizers.Adam(learning_rate=lr)
 yolo.compile(loss_iou_type="ciou")
 
-# def lr_scheduler(epoch):
-#     if epoch < int(epochs * 0.5):
-#         return lr
-#     if epoch < int(epochs * 0.8):
-#         return lr * 0.5
-#     if epoch < int(epochs * 0.9):
-#         return lr * 0.1
-#     return lr * 0.01
+def lr_scheduler(epoch):
+        return lr
 
 checkpoint_filepath = "./log/checkpoint"
 _callbacks = [
-    # callbacks.LearningRateScheduler(lr_scheduler),
+    callbacks.LearningRateScheduler(lr_scheduler),
     callbacks.TerminateOnNaN(),
     callbacks.TensorBoard(
         log_dir="./log/person",
@@ -67,7 +62,5 @@ yolo.fit(
     validation_data=val_data_set,
     validation_steps=50,
     validation_freq=5,
-    # steps_per_epoch=100,
+    steps_per_epoch=50,
 )
-
-# print("Total of time train: ", time.time - start_time)
