@@ -4,16 +4,16 @@ from yolov4.tf import SaveWeightsCallback, YOLOv4
 yolo = YOLOv4(tiny=True)
 yolo.classes = "../data/classes.names"
 # yolo.input_size = 32
-yolo.batch_size = 32
+yolo.batch_size = 16
 # yolo.input_size = 608
 # yolo.batch_size = 32
 
 
 yolo.make_model()
-yolo.load_weights(
-    "./weight/weight/yolov4-tiny-final.weights",
-    weights_type="yolo"
-)
+#yolo.load_weights(
+#    "./weight/weight/yolov4-tiny-final.weights",
+#    weights_type="yolo"
+#)
 
 train_data_set = yolo.load_dataset(
     "../data/train/trainPerson.txt",
